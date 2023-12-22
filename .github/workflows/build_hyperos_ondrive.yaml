@@ -49,8 +49,7 @@ jobs:
           cd ..
       - name: 3. 开始移植
         run: |
-          SIMG2IMG=$(which simg2img)
-          cp -rf $SIMG2IMG bin/Linux/x86_64/
+          ls
           sudo bash port.sh ${{ github.event.inputs.STOCK_URL }} ${{ github.event.inputs.PORT_URL }}
       - name: 4.上传到OneDrive
         run: |
