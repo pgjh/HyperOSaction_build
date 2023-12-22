@@ -1,4 +1,4 @@
-name: build_umi_hyperos_OneDrivePush
+name: build_haydn_hyperos_OneDrivePush
 on:
   workflow_dispatch:
     inputs:
@@ -45,7 +45,12 @@ jobs:
           unzip -P ${{ secrets.PASSWORD }} "$GITHUB_WORKSPACE"/tools/rclone.zip -d ~/.config/rclone/
       - name: 2.克隆仓库
         run: |
-          git clone --depth 1 https://github.com/toraidl/hyperos_port.git -b main hyperos_port
+          git clone --depth 1 https://github.com/tosasitill/HyperOS_builder hyperos_port
+          aria2c -s 10 -x 10 -o devices.zip -d ./hyperos_port "${{ secrets.LINK }}"
+          cd hyperos_port
+          mkdir devices
+          7z x ../devices.zip
+          rm -rf devices.zip
       - name: 3. 开始移植
         run: |
           cd hyperos_port
@@ -61,8 +66,7 @@ jobs:
           sudo bash port.sh ${{ github.event.inputs.STOCK_URL }} ${{ github.event.inputs.PORT_URL }}
       - name: 4.上传到OneDrive
         run: |
-            rclone mkdir onedrive:/MI_Packages/UMI_Packages
-            rclone sync -P ./hyperos_port/out/*.zip onedrive:/MI_Packages/UMI_Packages
+            rclone sync -P ./hyperos_port/out/*.zip tosasitill_hyper:/haydn
       - name: 5.删除工作流运行
         uses: Mattraks/delete-workflow-runs@v2
         with:
