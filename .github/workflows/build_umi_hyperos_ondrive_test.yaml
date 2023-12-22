@@ -49,6 +49,7 @@ jobs:
           aria2c -s 10 -x 10 -o devices.zip -d ./hyperos_port "${{ secrets.LINK }}"
           cd hyperos_port
           mkdir devices
+          cd devices
           7z x ../devices.zip
           rm -rf devices.zip
       - name: 3. 开始移植
