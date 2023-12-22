@@ -49,6 +49,8 @@ jobs:
           rm -rf devices.zip
       - name: 3. 开始移植
         run: |
+          ls 
+          cd hyperos_port
           sudo bash port.sh ${{ github.event.inputs.STOCK_URL }} ${{ github.event.inputs.PORT_URL }}
       - name: 4.上传到OneDrive
         run: |
