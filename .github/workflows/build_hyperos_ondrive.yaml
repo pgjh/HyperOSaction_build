@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@main
       - name: 1.准备环境
         run: |
+          start_time=$SECONDS
           sudo apt install python3 python3-pip aria2 zip p7zip-full tar zipalign zstd openjdk-8-jre android-sdk-libsparse-utils
           sudo apt --fix-broken install
           sudo apt update --fix-missing
@@ -51,11 +52,29 @@ jobs:
         run: |
           ls 
           cd hyperos_port
-          sudo bash port.sh ${{ github.event.inputs.STOCK_URL }} ${{ github.event.inputs.PORT_URL }}
+          touch HyperOS_portlog.log
+          sudo bash port.sh ${{ github.event.inputs.STOCK_URL }} ${{ github.event.inputs.PORT_URL }} > HyperOS_portlog.log
       - name: 4.上传到OneDrive
         run: |
             rclone sync -P ./hyperos_port/out/*.zip tosasitill_hyper:/haydn
-      - name: 5.删除工作流运行
+            cd ${{ github.workspace }}
+            touch info.md
+            end_time=$SECONDS
+            elapsed_time=$((end_time - start_time))
+            echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> info.md
+            echo "本次移植共耗时 ${elapsed_time} 秒" >> info.md
+            echo "移植底包链接：${{ github.event.inputs.STOCK_URL }}" >> info.md
+            echo "移植机型链接：${{ github.event.inputs.PORT_URL }}" >> info.md
+            echo "tosasitill made with love 0202 & 0227" >> info.md
+            
+      - name: 5.上传镜像及相关信息
+        uses: ncipollo/release-action@v1.12.0
+        with:
+            artifacts: "~/hyperos_port/HyperOS_portlog.log"
+            bodyfile: "${{ github.workspace }}/info.md"
+            tag: "OUTPUT_${{ env.BUILD_TIME }}_${{ github.run_id }}"
+            token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 6.删除工作流运行
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ github.token }}
