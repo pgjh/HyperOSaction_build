@@ -53,8 +53,7 @@ jobs:
         run: |
           ls 
           cd hyperos_port
-          touch HyperOS_portlog.log
-          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}" | tee HyperOS_portlog.log
+          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}"
           realpath HyperOS_portlog.log
       - name: 4.上传到OneDrive
         run: |
