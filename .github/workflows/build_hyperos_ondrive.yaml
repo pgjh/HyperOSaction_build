@@ -53,12 +53,13 @@ jobs:
         run: |
           ls 
           cd hyperos_port
-          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}"
-          realpath HyperOS_portlog.log
+          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}" | tee HyperOS_portlog.log
       - name: 4.上传到OneDrive
         run: |
             rclone sync -P ./hyperos_port/out/*.zip tosasitill_hyper:/haydn
             cd ${{ github.workspace }}
+            end_time=$SECONDS
+            elapsed_time=$((end_time - start_time))
             touch info.md
             echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> info.md
             echo "本次移植共耗时 ${elapsed_time} 秒" >> info.md
@@ -69,7 +70,7 @@ jobs:
       - name: 5.上传镜像及相关信息
         uses: ncipollo/release-action@v1.12.0
         with:
-            artifacts: "~/hyperos_port/HyperOS_portlog.log"
+            artifacts: "/home/runner/work/action_build/action_build/hyperos_port/HyperOS_portlog.log"
             bodyfile: "${{ github.workspace }}/info.md"
             tag: "OUTPUT_${{ env.BUILD_TIME }}_${{ github.run_id }}"
             token: ${{ secrets.GITHUB_TOKEN }}
