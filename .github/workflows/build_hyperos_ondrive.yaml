@@ -54,14 +54,12 @@ jobs:
           ls 
           cd hyperos_port
           touch HyperOS_portlog.log
-          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}" | tee HyperOS_portlog.log
+          sudo bash port.sh "${{ github.event.inputs.STOCK_URL }}" "${{ github.event.inputs.PORT_URL }}" | tee ~/hyperos_port/HyperOS_portlog.log
       - name: 4.上传到OneDrive
         run: |
             rclone sync -P ./hyperos_port/out/*.zip tosasitill_hyper:/haydn
             cd ${{ github.workspace }}
             touch info.md
-            end_time=$SECONDS
-            elapsed_time=$((end_time - start_time))
             echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> info.md
             echo "本次移植共耗时 ${elapsed_time} 秒" >> info.md
             echo "移植底包链接：${{ github.event.inputs.STOCK_URL }}" >> info.md
