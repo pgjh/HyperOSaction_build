@@ -58,8 +58,6 @@ jobs:
         run: |
             rclone sync -P ./hyperos_port/out/*.zip tosasitill_hyper:/haydn
             cd ${{ github.workspace }}
-            end_time=$SECONDS
-            elapsed_time=$((end_time - start_time))
             touch info.md
             echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> info.md
             echo "本次移植共耗时 ${elapsed_time} 秒" >> info.md
