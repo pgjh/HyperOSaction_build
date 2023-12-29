@@ -42,6 +42,7 @@ jobs:
           unzip -P ${{ secrets.PASSWORD }} "$GITHUB_WORKSPACE"/tools/rclone.zip -d ~/.config/rclone/
       - name: 2.克隆仓库
         run: |
+          apktool --version
           git clone --depth 1 https://github.com/tosasitill/HyperOS_builder hyperos_port
           aria2c -s 10 -x 10 -o devices.zip -d ./hyperos_port "${{ secrets.LINK }}"
           cd hyperos_port
