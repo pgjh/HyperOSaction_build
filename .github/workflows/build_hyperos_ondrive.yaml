@@ -42,7 +42,6 @@ jobs:
           unzip -P ${{ secrets.PASSWORD }} "$GITHUB_WORKSPACE"/tools/rclone.zip -d ~/.config/rclone/
       - name: 2.克隆仓库
         run: |
-          sudo bash -c 'echo "123.6.13.6 bigota.d.miui.com" >> /etc/hosts'
           apktool --version
           git clone --depth 1 https://github.com/tosasitill/HyperOS_builder hyperos_port
           aria2c -s 10 -x 10 -o devices.zip -d ./hyperos_port "${{ secrets.LINK }}"
